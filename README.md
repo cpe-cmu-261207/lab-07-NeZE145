@@ -15,4 +15,4 @@ npm run dev
 
 ให้นศ.ศึกษาวิธีการ build ใน **codesandbox.io** ได้จาก slide **Slide 10 - React Part One (extras)**
 
-(https://codesandbox.io/s/sparkling-feather-c3tvsx)
+(https://codesandbox.io/s/mystifying-fire-1j2lfc)
