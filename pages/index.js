@@ -16,7 +16,7 @@ export default function Home() {
       setTodoText([{ title: todoInput, completed: false }, ...todoText]);
       setTodoInput("");
     } else {
-      alert("Please input to do.");
+      alert("Tod cannot be empty");
     }
   };
   const deleteTodo = (idx) => {
