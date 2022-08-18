@@ -6,7 +6,6 @@ import {
   IconArrowUp,
   IconArrowDown,
 } from "@tabler/icons";
-import { json } from "hello/lib/defaults/default";
 
 export default function Home() {
   const [todoText, setTodoText] = useState([]);
