@@ -6,15 +6,66 @@ import {
   IconArrowUp,
   IconArrowDown,
 } from "@tabler/icons";
+import { json } from "hello/lib/defaults/default";
 
 export default function Home() {
-  const deleteTodo = (idx) => {};
+  const [todoText, setTodoText] = useState([]);
+  const [todoInput, setTodoInput] = useState("");
+  const onKeyUpHandler = (g) => {
+    if (g.key !== "Enter") return;
+    if (todoInput !== "") {
+      setTodoText([{ title: todoInput, completed: false }, ...todoText]);
+      setTodoInput("");
+    } else {
+      alert("Please input to do.");
+    }
+  };
+  const deleteTodo = (idx) => {
+    todoText.splice(idx, 1);
+    setTodoText([...todoText]);
+  };
 
-  const markTodo = (idx) => {};
+  const markTodo = (idx) => {
+    todoText[idx].completed = !todoText[idx].completed;
+    setTodoText([...todoText]);
+  };
 
-  const moveUp = (idx) => {};
+  const moveUp = (idx) => {
+    if (idx === 0) return;
+    const title = todoText[idx].title;
+    const completed = todoText[idx].completed;
+    todoText[idx].title = todoText[idx - 1].title;
+    todoText[idx].completed = todoText[idx - 1].completed;
+    todoText[idx - 1].title = title;
+    todoText[idx - 1].completed = completed;
+    setTodoText([...todoText]);
+  };
 
-  const moveDown = (idx) => {};
+  const moveDown = (idx) => {
+    if (idx === todoText.length - 1) return;
+    const title = todoText[idx].title;
+    const completed = todoText[idx].completed;
+    todoText[idx].title = todoText[idx + 1].title;
+    todoText[idx].completed = todoText[idx + 1].completed;
+    todoText[idx + 1].title = title;
+    todoText[idx + 1].completed = completed;
+    setTodoText([...todoText]);
+  };
+
+  const savetodo = () => {
+    const todoTextstr = JSON.stringify(todoText);
+    localStorage.setItem("todotextlist", todoTextstr);
+  };
+  const [data, setdata] = useState(true);
+  useEffect(() => {
+    if (data) setdata(false);
+    else savetodo();
+  }, [todoText]);
+
+  useEffect(() => {
+    const todoTextstr = localStorage.getItem("todotextlist");
+    setTodoText(JSON.parse(todoTextstr));
+  }, []);
 
   return (
     <div>
@@ -28,40 +79,35 @@ export default function Home() {
         <input
           className="form-control mb-1 fs-4"
           placeholder="insert todo here..."
+          onChange={(e) => setTodoInput(e.target.value)}
+          value={todoInput}
+          onKeyUp={onKeyUpHandler}
         />
         {/* Todos */}
-        {/* Example 1 */}
-        <div className="border-bottom p-1 py-2 fs-2 d-flex gap-2">
-          <span className="me-auto">Todo</span>
-        </div>
-        {/* Example 2 */}
-        <div className="border-bottom p-1 py-2 fs-2 d-flex gap-2">
-          <span className="me-auto">Todo with buttons</span>
-
-          <button className="btn btn-success">
-            <IconCheck />
-          </button>
-          <button className="btn btn-secondary">
-            <IconArrowUp />
-          </button>
-          <button className="btn btn-secondary">
-            <IconArrowDown />
-          </button>
-          <button className="btn btn-danger">
-            <IconTrash />
-          </button>
-        </div>
-
+        {todoText.map((todo, i) => (
+          <Todo
+            title={todo.title}
+            completed={todo.completed}
+            DELETE={() => deleteTodo(i)}
+            MARK={() => markTodo(i)}
+            MOVEUP={() => moveUp(i)}
+            MOVEDOWN={() => moveDown(i)}
+          />
+        ))}
         {/* summary section */}
         <p className="text-center fs-4">
-          <span className="text-primary">All (2) </span>
-          <span className="text-warning">Pending (2) </span>
-          <span className="text-success">Completed (0)</span>
+          <span className="text-primary">All ({todoText.length}) </span>
+          <span className="text-warning">
+            Pending ({todoText.filter((x) => x.completed === false).length}){" "}
+          </span>
+          <span className="text-success">
+            Completed ({todoText.filter((x) => x.completed).length})
+          </span>
         </p>
 
         {/* Made by section */}
         <p className="text-center mt-3 text-muted fst-italic">
-          made by Chayanin Suatap 12345679
+          made by Wasan Santichaiphonkul 640610667
         </p>
       </div>
     </div>
