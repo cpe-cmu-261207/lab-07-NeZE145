@@ -57,12 +57,16 @@ export default function Home() {
   };
   const [data, setdata] = useState(true);
   useEffect(() => {
-    if (data) setdata(false);
-    else savetodo();
+    if (data) {
+      setdata(false);
+      return;
+    }
+    savetodo();
   }, [todoText]);
 
   useEffect(() => {
     const todoTextstr = localStorage.getItem("todotextlist");
+    if (!todoTextstr) setTodoText([]);
     setTodoText(JSON.parse(todoTextstr));
   }, []);
 
